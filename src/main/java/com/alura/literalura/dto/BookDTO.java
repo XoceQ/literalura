@@ -1,38 +1,25 @@
-package com.alura.literalura.entity;
+package com.alura.literalura.dto;
 
-import jakarta.persistence.*;
+import com.alura.literalura.entity.Book;
 
-import java.util.List;
-
-@Entity
-public class Book {
-    @Id
-    @GeneratedValue
+public class BookDTO {
     private Long id;
-
     private String title;
     private String language;
     private String downloadLink;
     private Integer downloadCount;
 
-    // Relación con la clase Author (un libro puede tener varios autores)
-    @OneToMany(mappedBy = "book", fetch = FetchType.LAZY)
-    private List<Author> authors;
-
-    // Constructor sin argumentos
-    public Book() {
-        this.downloadCount = 0;  // Inicializar en 0
+    public BookDTO(Book book) {
+        this.id = book.getId();
+        this.title = book.getTitle();
+        this.language = book.getLanguage();
+        this.downloadLink = book.getDownloadLink();
+        this.downloadCount = book.getDownloadCount();
     }
 
-    // Constructor con parámetros
-    public Book(String title, String language, String downloadLink) {
-        this.title = title;
-        this.language = language;
-        this.downloadLink = downloadLink;
-        this.downloadCount = 0;  // Inicializar en 0
-    }
 
     // Getters y Setters
+
     public Long getId() {
         return id;
     }
@@ -73,20 +60,11 @@ public class Book {
         this.downloadCount = downloadCount;
     }
 
-    public List<Author> getAuthors() {
-        return authors;
-    }
-
-    public void setAuthors(List<Author> authors) {
-        this.authors = authors;
-    }
-
     @Override
     public String toString() {
-        return "Book{" +
+        return "BookDTO{" +
                 "id=" + id +
                 ", title='" + title + '\'' +
-                ", authors=" + authors +
                 ", language='" + language + '\'' +
                 ", downloadLink='" + downloadLink + '\'' +
                 ", downloadCount=" + downloadCount +
