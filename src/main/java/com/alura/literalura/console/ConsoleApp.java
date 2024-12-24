@@ -160,8 +160,6 @@ public class ConsoleApp implements CommandLineRunner {
         }
     }
 
-
-
     // Método auxiliar para obtener un número válido
     private Long getValidLong(Scanner scanner) {
         Long value = null;

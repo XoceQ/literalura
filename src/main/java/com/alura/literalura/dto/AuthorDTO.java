@@ -42,9 +42,8 @@ public class AuthorDTO {
     @Override
     public String toString() {
         return "AuthorDTO{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", bookId=" + bookId +
+                "name='" + name + '\'' +
+
                 '}';
     }
 }
