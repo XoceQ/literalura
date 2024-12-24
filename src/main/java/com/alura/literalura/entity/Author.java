@@ -14,10 +14,10 @@ public class Author {
 
 
     @Column(name = "death_year")
-    private Integer death_year; // Año de muerte (puede ser null si el autor está vivo)
+    private Integer death_year; // Año de muerte
 
 
-    // Relación ManyToOne con Book (un autor pertenece a un libro)
+    // Relación ManyToOne con Book (un libro puede tener muchos autores)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "book_id") // Clave foránea en la tabla Author
     private Book book;
