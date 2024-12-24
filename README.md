@@ -1,6 +1,8 @@
 LiterAlura - Book Catalog 📚 
 
-Description Welcome to my LiterAlura project! In this challenge, I built a book catalog by consuming the Gutendex API, which provides data for over 70,000 books from Project Gutenberg. This API gives me access to essential book details like titles, authors, languages, formats, and download counts. Best of all, it's free, easy to use, and doesn’t require an API key! 🚀
+Description Welcome to my LiterAlura project! In this challenge, I built a book catalog by consuming the Gutendex API, which provides data for over 70,000 books from Project Gutenberg. 
+https://gutendex.com/books/
+This API gives me access to essential book details like titles, authors, languages, formats, and download counts. Best of all, it's free, easy to use, and doesn’t require an API key! 🚀
 
 Tools and Technologies Used 🔧 Spring Boot: For building and running the backend application. PostgreSQL: To store book and author data. Gutendex API: For book and author data. JSON: To parse and manipulate API responses. 
 
