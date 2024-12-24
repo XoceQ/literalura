@@ -12,4 +12,7 @@ public interface BookRepository extends JpaRepository<Book, Long> {
 
     // Método para verificar si existe un libro con el ID proporcionado
     boolean existsById(Long id);
+
+    long countByLanguage(String language);
+
 }

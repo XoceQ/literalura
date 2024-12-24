@@ -33,7 +33,7 @@ public class BookService {
         // Asignar la lista de autores
         if (bookResponse.getAuthors() != null && !bookResponse.getAuthors().isEmpty()) {
             List<Author> authors = bookResponse.getAuthors().stream()
-                    .map(author -> new Author(author.getName(), book))  // Crear objetos Author con el nombre y asociarlos al libro
+                    .map(author -> new Author(author.getName(), null, null, book))  // Crear objetos Author con el nombre y asociarlos al libro
                     .collect(Collectors.toList());
             book.setAuthors(authors);  // Asignar la lista de objetos Author
         } else {
@@ -80,4 +80,8 @@ public class BookService {
             System.out.println("El libro con ID " + id + " no existe.");
         }
     }
+    public long countBooksByLanguage(String language) {
+        return bookRepository.countByLanguage(language); // Consulta al repositorio
+    }
+
 }

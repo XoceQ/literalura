@@ -56,15 +56,23 @@ public class GutendexService {
         book.setTitle(bookResponse.getTitle());
 
         // Verificación de autores nulos o vacíos
+        // En el método storeBook de GutendexService
+
         if (bookResponse.getAuthors() != null && !bookResponse.getAuthors().isEmpty()) {
-            List<Author> authors = bookResponse.getAuthors().stream()
-                    .filter(author -> author != null && author.getName() != null) // Filtrar autores nulos o sin nombre
-                    .map(author -> new Author(author.getName(), book)) // Crear objeto Author con el nombre
-                    .collect(Collectors.toList());
+            List<Author> authors = new ArrayList<>();
+            for (GutendexResponse.Author author : bookResponse.getAuthors()) {
+                Integer birthYear = author.getBirth_year();  // Ensure these match the API's field names
+                Integer deathYear = author.getDeath_year();  // Use getDeath_year() instead of getDeathYear()
+
+                Author newAuthor = new Author(author.getName(), birthYear, deathYear, book);
+                authors.add(newAuthor);
+            }
+
             book.setAuthors(authors);
         } else {
-            book.setAuthors(new ArrayList<>()); // Si no hay autores, asignar una lista vacía
+            book.setAuthors(new ArrayList<>());
         }
+
 
         // Manejo del enlace de descarga
         if (bookResponse.getFormats() != null && !bookResponse.getFormats().isEmpty()) {

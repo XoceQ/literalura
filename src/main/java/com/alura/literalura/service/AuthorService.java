@@ -25,10 +25,12 @@ public class AuthorService {
     // Crear y guardar un autor
     @Transactional
     public Author createAuthor(String name, Long bookId) {
-        Book book = bookRepository.findById(bookId).orElseThrow(() -> new IllegalArgumentException("Book ID no encontrado: " + bookId));
-        Author author = new Author(name, book);
+        Book book = bookRepository.findById(bookId)
+                .orElseThrow(() -> new IllegalArgumentException("Book ID no encontrado: " + bookId));
+        Author author = new Author(name, null, null, book); // Asigna valores predeterminados para birthYear y deathYear
         return authorRepository.save(author);
     }
+
 
     @Transactional
     public List<AuthorDTO> getAllAuthors() {
@@ -53,4 +55,23 @@ public class AuthorService {
         Author author = authorRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Author ID no encontrado: " + id));
         authorRepository.delete(author);
     }
+
+    public List<AuthorDTO> getAuthorsAliveInYear(int year) {
+        List<Author> authors = authorRepository.findAuthorsAliveInYear(year);
+        return authors.stream()
+                .map(AuthorDTO::new) // Convertir cada entidad `Author` a `AuthorDTO`
+                .toList();
+    }
+
+    public AuthorDTO convertToDTO(Author author) {
+        Integer birthYear = author.getBirth_year() != null ? author.getBirth_year(): -1; // Valor por defecto si es null
+        Integer deathYear = author.getDeath_year() != null ? author.getDeath_year() : -1; // Valor por defecto si es null
+
+        AuthorDTO authorDTO = new AuthorDTO(author);
+        authorDTO.setBirth_year(birthYear);
+        authorDTO.setDeath_year(deathYear);
+
+        return authorDTO;
+    }
+
 }
