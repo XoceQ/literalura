@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 
 import java.util.List;
 
+
+
 @Entity
 public class Book {
     @Id
@@ -15,24 +17,21 @@ public class Book {
     private String downloadLink;
     private Integer downloadCount;
 
-    // Relación con la clase Author (un libro puede tener varios autores)
-    @OneToMany(mappedBy = "book", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Author> authors;
 
-    // Constructor sin argumentos
     public Book() {
-        this.downloadCount = 0;  // Inicializar en 0
+        this.downloadCount = 0; // Inicializar en 0
     }
 
-    // Constructor con parámetros
     public Book(String title, String language, String downloadLink) {
         this.title = title;
         this.language = language;
         this.downloadLink = downloadLink;
-        this.downloadCount = 0;  // Inicializar en 0
+        this.downloadCount = 0; // Inicializar en 0
     }
 
-    // Getters y Setters
+    // Getter para el ID del libro
     public Long getId() {
         return id;
     }
@@ -41,20 +40,20 @@ public class Book {
         this.id = id;
     }
 
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
     public String getLanguage() {
         return language;
     }
 
     public void setLanguage(String language) {
         this.language = language;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getDownloadLink() {
@@ -72,6 +71,7 @@ public class Book {
     public void setDownloadCount(Integer downloadCount) {
         this.downloadCount = downloadCount;
     }
+    // Otros getters y setters...
 
     public List<Author> getAuthors() {
         return authors;
@@ -86,10 +86,10 @@ public class Book {
         return "Book{" +
                 "id=" + id +
                 ", title='" + title + '\'' +
-                ", authors=" + authors +
                 ", language='" + language + '\'' +
                 ", downloadLink='" + downloadLink + '\'' +
                 ", downloadCount=" + downloadCount +
+                ", authors=" + authors +
                 '}';
     }
 }

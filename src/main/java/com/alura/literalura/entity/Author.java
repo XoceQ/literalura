@@ -10,17 +10,20 @@ public class Author {
 
     private String name;
 
-    // Relación ManyToOne con Book (un autor puede tener varios libros)
+    // Relación ManyToOne con Book (un autor pertenece a un libro)
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "book_id")
+    @JoinColumn(name = "book_id") // Clave foránea en la tabla Author
     private Book book;
 
     // Constructor sin argumentos
-    public Author() {}
+    public Author() {
+
+    }
 
     // Constructor con parámetros
-    public Author(String name) {
+    public Author(String name, Book book) {
         this.name = name;
+        this.book = book;
     }
 
     // Getters y Setters
