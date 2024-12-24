@@ -1,7 +1,6 @@
 package com.alura.literalura.entity;
 
 import jakarta.persistence.*;
-
 import java.util.List;
 
 @Entity
@@ -15,13 +14,13 @@ public class Book {
     private String downloadLink;
     private Integer downloadCount;
 
-    // Relación con la clase Author (un libro puede tener varios autores)
-    @OneToMany(mappedBy = "book", fetch = FetchType.LAZY)
+    // Relación OneToMany con Author (un libro puede tener varios autores)
+    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Author> authors;
 
     // Constructor sin argumentos
     public Book() {
-        this.downloadCount = 0;  // Inicializar en 0
+        this.downloadCount = 0; // Inicializar en 0
     }
 
     // Constructor con parámetros
@@ -29,7 +28,18 @@ public class Book {
         this.title = title;
         this.language = language;
         this.downloadLink = downloadLink;
-        this.downloadCount = 0;  // Inicializar en 0
+        this.downloadCount = 0; // Inicializar en 0
+    }
+
+    // Métodos para manejar la relación con autores
+    public void addAuthor(Author author) {
+        authors.add(author);
+        author.setBook(this);
+    }
+
+    public void removeAuthor(Author author) {
+        authors.remove(author);
+        author.setBook(null);
     }
 
     // Getters y Setters
@@ -86,10 +96,10 @@ public class Book {
         return "Book{" +
                 "id=" + id +
                 ", title='" + title + '\'' +
-                ", authors=" + authors +
                 ", language='" + language + '\'' +
                 ", downloadLink='" + downloadLink + '\'' +
                 ", downloadCount=" + downloadCount +
+                ", authors=" + authors +
                 '}';
     }
 }

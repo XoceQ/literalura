@@ -1,6 +1,7 @@
 package com.alura.literalura.service;
 
 import com.alura.literalura.dto.BookDTO;
+import com.alura.literalura.dto.GutendexResponse;
 import com.alura.literalura.entity.Author;
 import com.alura.literalura.entity.Book;
 import com.alura.literalura.repository.AuthorRepository;
@@ -8,6 +9,7 @@ import com.alura.literalura.repository.BookRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,23 +24,37 @@ public class BookService {
         this.authorRepository = authorRepository;
     }
 
-    // Guardar un libro
+    // Método para almacenar un libro en la base de datos
     @Transactional
-    public Book saveBook(String title, String authorName, String downloadLink) {
-        // Crear el nuevo libro
+    public void storeBook(GutendexResponse.Book bookResponse) {
         Book book = new Book();
-        book.setTitle(title);
-        book.setDownloadLink(downloadLink);
+        book.setTitle(bookResponse.getTitle());
 
-        // Crear o recuperar el autor de la base de datos
-        Author author = new Author(authorName); // Asumimos que Author tiene un constructor que recibe el nombre
-        authorRepository.save(author); // Guarda el autor si no existe
+        // Asignar la lista de autores
+        if (bookResponse.getAuthors() != null && !bookResponse.getAuthors().isEmpty()) {
+            List<Author> authors = bookResponse.getAuthors().stream()
+                    .map(author -> new Author(author.getName(), book))  // Crear objetos Author con el nombre y asociarlos al libro
+                    .collect(Collectors.toList());
+            book.setAuthors(authors);  // Asignar la lista de objetos Author
+        } else {
+            book.setAuthors(new ArrayList<>()); // Si no hay autores, asignar una lista vacía
+        }
 
-        // Asociar el autor al libro
-        book.setAuthors(List.of(author)); // Establecer la lista de autores (ahora una lista de objetos Author)
+        // Extraer el enlace de descarga
+        if (bookResponse.getFormats() != null && !bookResponse.getFormats().isEmpty()) {
+            book.setDownloadLink(bookResponse.getFormats().values().iterator().next());
+        }
 
-        // Guardar el libro
-        return bookRepository.save(book); // Hibernate asignará el ID automáticamente
+        // Extraer el idioma
+        if (bookResponse.getLanguages() != null && !bookResponse.getLanguages().isEmpty()) {
+            book.setLanguage(bookResponse.getLanguages().get(0));
+        }
+
+        book.setDownloadCount(1000);
+
+        // Guardar el libro en la base de datos
+        bookRepository.save(book);
+        System.out.println("Libro guardado: " + book.getTitle());
     }
 
     // Mostrar todos los libros

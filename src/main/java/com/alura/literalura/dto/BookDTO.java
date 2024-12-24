@@ -1,6 +1,11 @@
 package com.alura.literalura.dto;
 
 import com.alura.literalura.entity.Book;
+import com.alura.literalura.entity.Author;
+
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class BookDTO {
     private Long id;
@@ -8,6 +13,8 @@ public class BookDTO {
     private String language;
     private String downloadLink;
     private Integer downloadCount;
+    private List<String> authors;  // Añadir lista de nombres de autores
+
 
     public BookDTO(Book book) {
         this.id = book.getId();
@@ -15,10 +22,15 @@ public class BookDTO {
         this.language = book.getLanguage();
         this.downloadLink = book.getDownloadLink();
         this.downloadCount = book.getDownloadCount();
+        // Convertir la lista de autores a una lista de nombres de autores
+        this.authors = book.getAuthors().stream()
+                .map(Author::getName)
+                .collect(Collectors.toList());
     }
 
 
     // Getters y Setters
+
 
     public Long getId() {
         return id;
@@ -52,6 +64,14 @@ public class BookDTO {
         this.downloadLink = downloadLink;
     }
 
+    public List<String> getAuthors() {
+        return authors;
+    }
+
+    public void setAuthors(List<String> authors) {
+        this.authors = authors;
+    }
+
     public Integer getDownloadCount() {
         return downloadCount;
     }
@@ -68,6 +88,7 @@ public class BookDTO {
                 ", language='" + language + '\'' +
                 ", downloadLink='" + downloadLink + '\'' +
                 ", downloadCount=" + downloadCount +
+                ", authors=" + authors +
                 '}';
     }
 }

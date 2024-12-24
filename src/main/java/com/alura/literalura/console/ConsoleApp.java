@@ -1,8 +1,10 @@
 package com.alura.literalura.console;
 
+import com.alura.literalura.dto.AuthorDTO;
 import com.alura.literalura.dto.BookDTO;
 import com.alura.literalura.dto.GutendexResponse;
 import com.alura.literalura.entity.Book;
+import com.alura.literalura.service.AuthorService;
 import com.alura.literalura.service.BookService;
 import com.alura.literalura.service.GutendexService;
 import jakarta.transaction.Transactional;
@@ -18,10 +20,13 @@ public class ConsoleApp implements CommandLineRunner {
 
     private final GutendexService gutendexService;
     private final BookService bookService;
+    private final AuthorService authorService; // Inyección de AuthorService
 
-    public ConsoleApp(GutendexService gutendexService, BookService bookService) {
+
+    public ConsoleApp(GutendexService gutendexService, BookService bookService, AuthorService authorService) {
         this.gutendexService = gutendexService;
         this.bookService = bookService;
+        this.authorService = authorService;
     }
 
     @Override
@@ -35,7 +40,9 @@ public class ConsoleApp implements CommandLineRunner {
                 case 1 -> searchBooks(scanner);
                 case 2 -> showBooks();
                 case 3 -> deleteBook(scanner);
-                case 4 -> exit();
+                case 4 -> showAuthorsByBook(scanner);
+                case 5 -> showAllAuthors();
+                case 6 -> exit();
                 default -> System.out.println("Opción no válida.");
             }
         }
@@ -47,7 +54,9 @@ public class ConsoleApp implements CommandLineRunner {
         System.out.println("1. Buscar libros");
         System.out.println("2. Mostrar libros guardados");
         System.out.println("3. Eliminar libro por ID");
-        System.out.println("4. Salir");
+        System.out.println("4. Mostrar autores por libro");
+        System.out.println("5. Mostrar todos los autores");
+        System.out.println("6. Salir");
         System.out.print("Seleccione una opción: ");
     }
 
@@ -66,6 +75,31 @@ public class ConsoleApp implements CommandLineRunner {
             }
         }
         return choice;
+    }
+
+    // Mostrar todos los autores
+    @Transactional
+    public void showAllAuthors() {
+        List<AuthorDTO> authors = authorService.getAllAuthors();
+        if (authors.isEmpty()) {
+            System.out.println("No hay autores registrados.");
+        } else {
+            authors.forEach(author -> System.out.println(author));
+        }
+    }
+
+    // Mostrar autores por libro
+    @Transactional
+    public void showAuthorsByBook(Scanner scanner) {
+        System.out.print("Ingrese ID del libro: ");
+        Long bookId = getValidLong(scanner);
+        List<AuthorDTO> authors = authorService.getAuthorsByBookId(bookId);
+        if (authors.isEmpty()) {
+            System.out.println("No se encontraron autores para el libro con ID " + bookId);
+        } else {
+            System.out.println("Autores para el libro con ID " + bookId + ":");
+            authors.forEach(author -> System.out.println(author));
+        }
     }
 
     // Método para buscar libros y mostrar resultados
@@ -115,7 +149,30 @@ public class ConsoleApp implements CommandLineRunner {
                     : "Sin autor";
 
             System.out.printf("%d. %s por %s%n", i + 1, book.getTitle(), authors);
+
+            // Si quieres mostrar los autores en formato más detallado usando AuthorDTO
+            // Este paso es opcional dependiendo de cómo estés manejando los autores
+            for (GutendexResponse.Author author : book.getAuthors()) {
+                AuthorDTO authorDTO = new AuthorDTO(author.getName());
+                System.out.println(authorDTO); // Esto imprimirá el nombre del autor
+            }
         }
+    }
+    // Método auxiliar para obtener un número válido
+    private Long getValidLong(Scanner scanner) {
+        Long value = null;
+        boolean valid = false;
+        while (!valid) {
+            try {
+                value = scanner.nextLong();
+                scanner.nextLine(); // Consumir el salto de línea
+                valid = true;
+            } catch (InputMismatchException e) {
+                System.out.println("Entrada no válida. Por favor, ingrese un número válido.");
+                scanner.nextLine(); // Limpiar el buffer
+            }
+        }
+        return value;
     }
 
 
