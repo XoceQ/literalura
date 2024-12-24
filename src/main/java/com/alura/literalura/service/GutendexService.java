@@ -84,8 +84,11 @@ public class GutendexService {
             book.setLanguage(bookResponse.getLanguages().get(0));
         }
 
-        book.setDownloadCount(1000); // Número de descargas predeterminado
-
+        if (bookResponse.getDownloadCount() != null) {
+            book.setDownloadCount(bookResponse.getDownloadCount());
+        } else {
+            book.setDownloadCount(0); // Set to 0 or handle as needed if no download count is provided
+        }
         // Guardar el libro en la base de datos
         bookRepository.save(book);
         System.out.println("Libro guardado: " + book.getTitle());

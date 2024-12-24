@@ -34,6 +34,9 @@ public class GutendexResponse {
         @JsonProperty("formats")
         private Map<String, String> formats;
 
+        @JsonProperty("download_count")  // Assuming the API returns this field
+        private Integer downloadCount;
+
         // Getters y Setters
         public String getTitle() {
             return title;
@@ -65,6 +68,14 @@ public class GutendexResponse {
 
         public void setFormats(Map<String, String> formats) {
             this.formats = formats;
+        }
+
+        public Integer getDownloadCount() {
+            return downloadCount;
+        }
+
+        public void setDownloadCount(Integer downloadCount) {
+            this.downloadCount = downloadCount;
         }
     }
 
