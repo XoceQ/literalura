@@ -47,7 +47,6 @@ public class AuthorService {
                 .collect(Collectors.toList());
     }
 
-
     // Eliminar un autor por ID
     @Transactional
     public void deleteAuthorById(Long id) {

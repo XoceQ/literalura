@@ -7,11 +7,15 @@ public class AuthorDTO {
     private String name;
     private Long bookId;
 
-    // Constructor que recibe un objeto Author
     public AuthorDTO(Author author) {
-        this.id = author.getId();  // Obtener el ID del autor
-        this.name = author.getName();  // Obtener el nombre del autor
-        this.bookId = author.getBook() != null ? author.getBook().getId() : null;  // Obtener el ID del libro asociado
+        this.id = author.getId();
+        this.name = author.getName();
+        this.bookId = author.getBook() != null ? author.getBook().getId() : null;
+    }
+
+    // Constructor que recibe solo el nombre (si solo te interesa mostrar el nombre)
+    public AuthorDTO(String name) {
+        this.name = name;
     }
 
     // Getters y Setters
@@ -42,8 +46,9 @@ public class AuthorDTO {
     @Override
     public String toString() {
         return "AuthorDTO{" +
-                "name='" + name + '\'' +
-
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", bookId=" + bookId +
                 '}';
     }
 }
